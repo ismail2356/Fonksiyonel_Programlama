@@ -1,199 +1,81 @@
-import React, { useState } from 'react';
-
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { ImageBackground } from 'react-native';
-const Kahveler = () => {
-  const navigation = useNavigation();
-
-  // Kahve bilgilerini içeren bir dizi
-  const coffees = [
-    {
-      id: 1,
-      name: "Espresso",
-      description: "İnce öğütülmüş kahve çekirdeklerinden buharın geçirilmesiyle yapılan güçlü ve lezzetli kahve.",
-      price: 60,
-      image: require('../../assets/kahveler/espresso.jpg'), // Kahve resmi
-    },
-    {
-      id: 2,
-      name: "Latte",
-      description: "Espresso ve buharlanmış sütle yapılan kahve.",
-      price: 50,
-      image: require('../../assets/kahveler/latte.jpg'), // Kahve resmi
-    },
-    {
-      id: 3,
-      name: "Cappuccino",
-      description: "Eşit miktarda espresso, buharlanmış süt ve süt köpüğünden yapılan kahve.",
-      price: 80,
-      image: require('../../assets/kahveler/cappuccino.jpg'), // Kahve resmi
-    },
-    {
-      id: 4,
-      name: "Mocha",
-      description: "Espresso, sıcak süt ve çikolata şurubu ile yapılan kahve.",
-      price: 100,
-      image: require('../../assets/kahveler/mocha.jpg'), // Kahve resmi
-    },
-    {
-      id: 5,
-      name: "Americano",
-      description: "Espresso sıcak suyla seyreltilir.",
-      price: 90,
-      image: require('../../assets/kahveler/americano.jpg'), // Kahve resmi
-    },
-    {
-      id: 6,
-      name: "Macchiato",
-      description: "Espressoya az miktarda süt köpüğü eklenir.",
-      price: 95,
-      image: require('../../assets/kahveler/macchiato.jpg'), // Kahve resmi
-    },
-    {
-      id: 7,
-      name: "Turkish Coffee",
-      description: "Geleneksel kahve hazırlama yöntemi, ince öğütülmüş kahve çekirdeklerinin şekerle kaynatılıp, filtrelenmeden servis edilmesidir.",
-      price: 100,
-      image: require('../../assets/kahveler/turkish_coffee.jpg'), // Kahve resmi
-    },
-    {
-      id: 8,
-      name: "Iced Coffee",
-      description: "Buz küpleriyle soğutulmuş kahve, genellikle şekerli veya sütle servis edilir.",
-      price: 95,
-      image: require('../../assets/kahveler/iced_coffee.jpg'), // Kahve resmi
-    },
-    {
-      id: 9,
-      name: "Flat White",
-      description: "Espresso ve buharlanmış sütle yapılan, latteye benzer ancak kahve/süt oranı daha yüksek ve kadifemsi bir dokuya sahip kahve içeceği.",
-      price: 100,
-      image: require('../../assets/kahveler/flat_white.jpg'), // Kahve resmi
-    },
-    {
-      id: 10,
-      name: "Vienna Coffee",
-      description: "Kahvenin üzerine çırpılmış krema eklenir ve genellikle tarçın veya çikolatayla tatlandırılır.",
-      price: 120,
-      image: require('../../assets/kahveler/vienna_coffee.jpg'), // Kahve resmi
-    },
-    {
-      id: 11,
-      name: "Irish Coffee",
-      description: "Sıcak kahve, İrlanda viskisi ve şekerden oluşan, üstüne krema konan kahve kokteyli.",
-      price: 120,
-      image: require('../../assets/kahveler/irish_coffee.jpg'), // Kahve resmi
-    },
-    {
-      id: 12,
-      name: "Affogato",
-      description: "İtalyan kahvesi bazlı, vanilyalı dondurma veya üzerine bir shot sıcak espresso eklenmiş dondurmadan yapılan tatlı.",
-      price: 120,
-      image: require('../../assets/kahveler/affogato.jpg'), // Kahve resmi
-    },
-    {
-      id: 13,
-      name: "Dalgona Coffee",
-      description: "Çırpılmış kahve, hazır kahve, şeker ve sıcak suyun krema kıvamına gelinceye kadar çırpılması ve ardından soğuk veya sıcak sütün üzerine dökülmesiyle yapılır.",
-      price: 110,
-      image: require('../../assets/kahveler/dalgona_coffee.jpg'), // Kahve resmi
-    },
-    {
-      id: 14,
-      name: "Ristretto",
-      description: "Aynı miktarda kahve ancak yarısı kadar su ile yapılan kısa shot espresso, daha konsantre ve daha koyu bir tada neden olur.",
-      price: 85,
-      image: require('../../assets/kahveler/ristretto.jpg'), // Kahve resmi
-    },
-  ];
-
-  // Favoriler state'i ve değiştirme fonksiyonu
-  const [favorites, setFavorites] = useState([]);
-
-  const handleBuyNow = () => {
-    // Satın alma işlemi burada gerçekleştirilebilir
-    alert('Buy Now button pressed!');
-  };
-
-  const handleAddToFavorites = (coffeeId) => {
-    // Favorilere ekleme işlemi burada gerçekleştirilebilir
-    setFavorites([...favorites, coffeeId]);
-    alert('Kahve favorilere başarıyla eklendi!');
-  };
-
-  return (
-    <ImageBackground source={require('../../assets/kahveler/kahvelerAp.jpg')} style={styles.background}>
-    <ScrollView contentContainerStyle={styles.container}>
-      {coffees.map(coffee => (
-        <View key={coffee.id} style={styles.coffeeContainer}>
-          <Image source={coffee.image} style={styles.image} />
-          <Text style={styles.title}>{coffee.name}</Text>
-          <Text style={styles.description}>{coffee.description}</Text>
-          <Text style={styles.price}>Fiyat: {coffee.price}</Text>
-          <TouchableOpacity style={styles.actionButton} onPress={handleAddToFavorites.bind(null, coffee.id)}>
-            <Text style={styles.actionButtonText}>Favorilere Ekle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={handleBuyNow}>
-            <Text style={styles.actionButtonText}>Satın Al</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-    </ScrollView>
-    </ImageBackground>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+export const Kahveler = [
+  {
+    id: '1',
+    name: 'Affogato Coffee',
+    price: 100,
+    description: ' Affogato, bir top dondurma veya kremalı dondurma ile üzerine sıcak espresso dökülerek yapılan bir İtalyan tatlısıdır.',
+    image: 'https://i.postimg.cc/dt9YS2Mn/affogato.jpg',
   },
-  coffeeContainer: {
-    width: '45%',
-    margin: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: '#FF9800',
-    alignItems: 'center',
+  {
+    id: '2',
+    name: 'Americano Coffee',
+    price: 70,
+    description: 'Americano, espresso ile sıcak suyun karışımından oluşan bir kahve',
+    
+    image: 'https://i.postimg.cc/SKB3KRFJ/americano.jpg',
   },
-  image: {
-    width: 150,
-    height: 150,
-    marginBottom: 10,
-    borderRadius: 10,
+  {
+    id: '3',
+    name: 'Cappucino Coffee',
+    price: 60,
+    description: 'Cappuccino, espresso, buharla ısıtılmış süt ve kadifemsi bir köpükten oluşan harmonik bir karışımdır. Bu lüks ve kremsi kahve deneyimi, kahve tutkunları için mükemmel bir seçimdir.',
+    
+    image: 'https://i.postimg.cc/LXkC6V3b/cappuccino.jpg',
   },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
+  {
+    id: '4',
+    name: 'Dalgona Coffee',
+    price: 85,
+    description: 'Dalgona kahvesi, sıcak su, şeker ve kahvenin karıştırılmasıyla elde edilen, üstüne soğuk süt eklenerek tüketilen köpüklü bir kahve içeceğidir.',
+    
+    image: 'https://i.postimg.cc/QC0fcxPg/dalgona-coffee.jpg',
   },
-  description: {
-    fontSize: 14,
-    marginBottom: 5,
+  {
+    id: '5',
+    name: 'Espresso Coffee',
+    price: 75,
+    description: 'Espresso, kahve çekirdeklerinin basınç altında sıcak suyla demlenmesiyle hazırlanan yoğun ve aromatik bir kahve çeşididir.',
+   
+    image: 'https://i.postimg.cc/7ZCKT4N7/espresso.jpg',
   },
-  price: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 15,
+  {
+    id: '6',
+    name: 'Türk Kahvesi',
+    price: 120 ,
+    description: 'Türk kahvesi, ince çekilmiş kahve çekirdeklerinin cezvede kaynatılarak hazırlanan, yoğun aromalı ve köpüklü bir kahve çeşididir.',
+    
+    image: 'https://i.postimg.cc/KjvNchz1/turkish-coffee.jpg',
   },
-  actionButton: {
-    backgroundColor: '#f57c00',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 5,
+  {
+    id: '7',
+    name: 'Vienna Coffee',
+    price: 70,
+    description: 'Vienna kahvesi, sıcak sütle hazırlanan ve üzerine çırpılmış krema eklenen, tatlı ve zengin bir kahve içeceğidir.',
+    
+    image: 'https://i.postimg.cc/qqbGzDhj/vienna-coffee.jpg',
   },
-  actionButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  {
+    id: '8',
+    name: 'irish Coffee',
+    price: 90,
+    description: 'İrlanda kahvesi, sıcak kahve üzerine İrlanda viskisi ve şeker eklenerek hazırlanan, genellikle krema ile süslenen alkollü bir kahve içeceğidir.',
+    
+    image: 'https://i.postimg.cc/KvWNbVyY/irish-coffee.jpg',
   },
-});
-
-export default Kahveler;
+  {
+    id: '9',
+    name: 'Iced Coffee',
+    price: 60,
+    description: 'Buzlu kahve, soğuk su veya süt ile demlenmiş kahvenin üzerine buz eklenerek hazırlanan serinletici bir içecektir.',
+    
+    image: 'https://i.postimg.cc/ydnmbpPs/iced-coffee.jpg',
+  },
+  {
+    id: '10',
+    name: 'Mocha Coffee',
+    price: 80,
+    description: 'Mocha, espresso, süt ve çikolata sosunun bir araya gelmesiyle oluşan, zengin ve kremsi bir kahve içeceğidir.',
+    
+    image: 'https://i.postimg.cc/Y096KNng/mocha.jpg',
+  },
+];

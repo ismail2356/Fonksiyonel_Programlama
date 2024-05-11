@@ -1,61 +1,100 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
-import Favoriler from './Favoriler'; // Favoriler bileşenini import et
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { Header } from 'react-native/Libraries/NewAppScreen';
 
 const Musteri = () => {
-  // Favori kahveleri saklamak için bir state tanımla
-  const [favoriKahveler, setFavoriKahveler] = useState([]);
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const navigation = useNavigation();
 
-  // Favorileri gösterme fonksiyonu
-  const handleFavorileriGoster = () => {
-    // Favorileri göstermek için bir alert kullanabilirsiniz
-    alert('Favori Kahveler: ' + favoriKahveler.join(', '));
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('name');
+        const storedAddress = await AsyncStorage.getItem('address');
+        const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+
+        setName(storedName || '');
+        setAddress(storedAddress || '');
+        setPhoneNumber(storedPhoneNumber || '');
+      } catch (error) {
+        console.log('Veri alınırken hata oluştu:', error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  const handleFavorites = () => {
+    navigation.navigate('favoritelist');
   };
 
-  // Kart eklemek için fonksiyon
-  const handleKartEkle = () => {
-    // Kart ekleme işlemleri burada yapılacak
-    // Örnek bir işlem: Favori kahvelere rastgele bir kahve ekleyelim
-    const kahve = 'Rastgele Kahve'; // Örnek bir kahve
-    setFavoriKahveler([...favoriKahveler, kahve]);
+  const handleUpdateInfo = () => {
+    navigation.navigate('updateinfo');
   };
 
   return (
-    <ImageBackground source={require('../../assets/kahveler/MusteriArkaPlan.jpg')} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Müşteri Ekranı</Text>
-        <Favoriler favorites={favoriKahveler} />
-        <View style={styles.buttonContainer}>
-          <Button title="Kart Ekle" onPress={handleKartEkle} color="#f57c00" />
-          <Button title="Favorilerimi Görüntüle" onPress={handleFavorileriGoster} color="#f57c00" />
+    <View style={styles.container}>
+      
+      <Text style={styles.title}>Profil Sayfası</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.infoItem}>
+          <Text style={styles.label}>Ad:</Text>
+          <Text style={styles.value}>{name}</Text>
+        </View>
+        <View style={styles.infoItem}>
+          <Text style={styles.label}>Adres:</Text>
+          <Text style={styles.value}>{address}</Text>
+        </View>
+        <View style={styles.infoItem}>
+          <Text style={styles.label}>Telefon Numarası:</Text>
+          <Text style={styles.value}>{phoneNumber}</Text>
         </View>
       </View>
-    </ImageBackground>
+      <View style={styles.buttonContainer}>
+        <Button title="Favoriler" onPress={handleFavorites} />
+        <Button title="Bilgileri Güncelle" onPress={handleUpdateInfo} />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
-  },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 16,
+    backgroundColor:'#f57c00',
   },
+ 
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#f57c00', // Kapalı turuncu renk
+    marginBottom: 24,
+  },
+  infoContainer: {
+    marginBottom: 16,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  value: {
+    fontSize: 16,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    width: '80%',
+    justifyContent: 'space-between',
+    
+    
   },
 });
 

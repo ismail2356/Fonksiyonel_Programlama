@@ -1,48 +1,64 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet,ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { FIREBASE_auth } from '../FireBaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const LoginPage = ({navigation}) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigation = useNavigation();
+  const auth = FIREBASE_auth;
+
+  const handleLogin = async () => {
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Giriş başarılı');
+      navigation.navigate('Home');
+    } catch (error) {
+      console.log('Login error:', error);
+      setError('Geçersiz e-posta veya şifre');
+    }
+  };
+
+  const handleRegister = () => {
+    
+    navigation.navigate('SignUp');
+  };
 
   return (
-    <ImageBackground
-      source={require('../../assets/girisekrani.jpg')}
-      style={styles.backgroundImage}>
-      <View style={styles.container}>
-        <Text style={styles.headerText}>Kahve Dünyasına Hoş Geldiniz!</Text>
-        <TextInput
-  style={[styles.input, styles.textInputBackground, styles.textInputText]}
-  placeholder="E-posta Adresi"
-  onChangeText={text => setEmail(text)}
-/>
-
-
-
-<TextInput
-  style={[styles.input, styles.textInputBackground, styles.textInputText]}
-  placeholder="Şifre"
-  secureTextEntry={true}
-  onChangeText={text => setPassword(text)}
-/>
-
-      
-
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('kahve') } style={styles.button}>
-            <Text style={styles.buttonText}>Giriş Yap</Text>
-          </TouchableOpacity>
-          {/* Kayıt Ol buttonu eklendi */}
-          <TouchableOpacity onPress={() => navigation.navigate('musteri') } style={styles.button}>
-            <Text style={styles.buttonText}>Kayıt Ol</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity  style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Şifremi Unuttum?</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+    <View style={styles.container}>
+       <ImageBackground
+      source={require('../assets/kahveler/GirisEkrani.jpg')} // Arka plan resmi
+      style={styles.backgroundImage} // Arka plan resmi stil
+    ></ImageBackground>
+      <Text style={styles.title}></Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor="white"
+        onChangeText={text => setEmail(text)}
+        value={email}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="white"
+        onChangeText={text => setPassword(text)}
+        value={password}
+        secureTextEntry
+      />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Giriş</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <Text style={styles.registerButtonText}>Kayıt Ol</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -51,69 +67,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f57c00',
+    padding: 16,
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
     width: '100%',
-    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  headerText: {
+  
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
+  },
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
     marginBottom: 20,
   },
   input: {
-    width: 300,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     width: '100%',
+    height: 50,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    marginBottom: 20,
+    fontSize: 16,
   },
-  button: {
-    width: 100,
+  loginButton: {
+    width: '70%',
     height: 40,
-    backgroundColor: '#f57c00',
-    borderRadius: 5,
+    borderRadius: 8,
+    backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    marginBottom: 16,
   },
   buttonText: {
-    color: 'white',
     fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
   },
-  forgotPassword: {
-    marginTop: 10,
+  registerButton: {
+    alignSelf: 'center',
+    marginBottom: 16,
   },
-  forgotPasswordText: {
-    color: '#f57c00',
+  registerButtonText: {
     fontSize: 16,
+    color: 'black',
+    textDecorationLine: 'underline',
   },
-  textInputText: {
-    color: '#f57c00', // turuncu renk
-    important: true,
+  errorText: {
+    color: 'red',
+    marginBottom: 16,
   },
-  textInputBackground: {
-    backgroundColor: 'white',
-  },
-  botoon:{
-    width:'30',
-    height:50,
-    borderRadius:20,
-    alignItems:'center',
-    justifyContent:'center',
-
-  }
- 
 });
 
-export default LoginPage;
+export default Login;
